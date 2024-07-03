@@ -45,6 +45,17 @@ class MoneyTest {
     assert.deepStrictEqual(portfolio.evaluate("KRW"), expectedValue);
   }
 
+  testAdditionWithMultipleMissingExchangeRates() {
+    let oneDollar = new Money(1, "USD");
+    let oneEuro = new Money(1, "EUR");
+    let oneWon = new Money(1, "KRW");
+
+    let portfolio = new Portfolio();
+    portfolio.add(oneDollar, oneEuro, oneWon);
+    let expectedError = new Error("Brakuje kursu (kursów) wymiany: [ USD->Kalganid, EUR->Kalganid, KRW->Kalganid ]");
+    assert.throws(function() {portfolio.evaluate("Kalganid")}, expectedError);
+  }
+
   runAllTests() {
     let testMethods = this.getAllTestMethods();
     testMethods.forEach((m) => {
