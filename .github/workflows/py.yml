@@ -18,8 +18,5 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Test
-      run: |
-        pip install pytest pytest-randomly
-        cd py
-        pytest -v --random-order
+      run: python py/test_money.py -v
       shell: bash
