@@ -20,5 +20,6 @@ jobs:
     - name: Test
       run: |
         pip install pytest pytest-randomly
-        pytest py/test_money.py -v --random-order
+        cd py
+        pytest -v --random-order
       shell: bash
