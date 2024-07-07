@@ -77,6 +77,44 @@ class MoneyTest {
     assert.throws(() => this.bank.convert(tenEuros, "Kalganid"), expectedError);
   }
 
+  testAdditionWithTestDouble() {
+    const moneyCount = 10;
+    let moneys = []
+    for (let i = 0; i < moneyCount; i++) {
+      moneys.push(new Money(Math.random(Number.MAX_SAFE_INTEGER), "Nie ma znaczenia"));
+    }
+    let bank = {
+      convert: function () {
+        return new Money(Math.PI, "Kalganid");
+      }
+    };
+    
+    let arbitraryResult = new Money(moneyCount * Math.PI, "Kalganid");
+    let portfolio = new Portfolio();
+    portfolio.add(...moneys);
+    assert.deepStrictEqual(portfolio.evaluate(bank, "Kalganid"), arbitraryResult);
+  }
+
+  testAddTwoMoneysInSameCurrency() {
+    let fiveKalganid = new Money(5, "Kalganid");
+    let tenKalganid = new Money(10, "Kalganid");
+    let fifteenKalganid = new Money(15, "Kalganid");
+    
+    assert.deepStrictEqual(fiveKalganid.add(tenKalganid), fifteenKalganid);
+    assert.deepStrictEqual(tenKalganid.add(fiveKalganid), fifteenKalganid);
+  }
+
+  testAddTwoMoneysInDifferentCurrencies() {
+    let oneEuro = new Money(1, "EUR");
+    let oneDollar = new Money(1, "USD");
+    
+    let expectedError = new Error("Nie można dodać USD do EUR")
+    assert.throws(function () { oneEuro.add(oneDollar); }, expectedError);
+
+    expectedError = new Error("Nie można dodać EUR do USD")
+    assert.throws(function () { oneDollar.add(oneEuro); }, expectedError);
+  }
+
   runAllTests() {
     let testMethods = this.getAllTestMethods();
     testMethods.forEach((m) => {
